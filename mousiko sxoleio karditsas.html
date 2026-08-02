@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Μουσικό Σχολείο Καρδίτσας</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,560;0,9..144,650;1,9..144,500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1EAD9;
+    --paper-deep:#E9DFC7;
+    --line:#CDBD98;
+    --ink:#241F1A;
+    --ink-soft:#4A4237;
+    --cover:#2E4636;
+    --cover-dark:#1D2E23;
+    --cover-tint:#3E5A47;
+    --brass:#B8874C;
+    --brass-light:#D6AD73;
+    --oxblood:#7C2B2B;
+    --card:#FAF6EA;
+    --shadow: 0 18px 40px -18px rgba(29,25,15,0.35);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth; -webkit-overflow-scrolling:touch;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Literata', serif;
+    font-size:17px;
+    line-height:1.6;
+    overflow-x:hidden;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 118px, rgba(36,31,26,0.035) 119px, rgba(36,31,26,0.035) 120px);
+  }
+
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+
+  a{color:inherit; text-decoration:none;}
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--oxblood);
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px; height:1px; background:var(--oxblood);
+    display:inline-block;
+  }
+
+  h1,h2,h3,h4{
+    font-family:'Fraunces', serif;
+    font-weight:650;
+    color:var(--ink);
+    letter-spacing:-0.01em;
+  }
+
+  /* ---------- Progress staff (side rail) ---------- */
+  .staff-rail{
+    position:fixed;
+    left:26px; top:0; bottom:0;
+    width:34px;
+    z-index:60;
+    display:flex; align-items:center; justify-content:center;
+    pointer-events:none;
+    transform:translateZ(0);
+  }
+  .staff-rail svg{height:70vh; width:34px; overflow:visible;}
+  .rail-line{stroke:var(--ink); stroke-opacity:0.16; stroke-width:1;}
+  .rail-progress{
+    stroke:var(--oxblood);
+    stroke-width:1.4;
+    stroke-dasharray:1 1;
+    will-change:stroke-dashoffset;
+  }
+  .rail-note{
+    transform-origin:center;
+    will-change:transform;
+  }
+  @media (max-width:980px){ .staff-rail{display:none;} }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    padding:22px 0;
+    transition:padding 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+    transform:translateZ(0);
+  }
+  header.scrolled{
+    padding:12px 0;
+    background:rgba(241,234,217,0.97);
+    box-shadow:0 1px 0 rgba(36,31,26,0.12);
+  }
+  header .wrap{display:flex; align-items:center; justify-content:space-between;}
+  .brand{display:flex; align-items:center; gap:12px;}
+  .brand-mark{
+    width:40px; height:40px; border-radius:50%;
+    background:var(--cover);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--paper);
+    font-family:'Fraunces', serif; font-weight:650; font-size:17px;
+    flex-shrink:0;
+  }
+  .brand-text{font-family:'Fraunces', serif; font-weight:600; font-size:16.5px; line-height:1.15;}
+  .brand-text span{display:block; font-family:'JetBrains Mono', monospace; font-weight:500; font-size:10.5px; letter-spacing:0.1em; color:var(--ink-soft); text-transform:uppercase; margin-top:2px;}
+
+  nav.links{display:flex; gap:34px; align-items:center;}
+  nav.links a{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    position:relative;
+    padding-bottom:3px;
+  }
+  nav.links a::after{
+    content:""; position:absolute; left:0; bottom:0; height:1px; width:0;
+    background:var(--oxblood); transition:width 0.3s ease;
+  }
+  nav.links a:hover{color:var(--ink);}
+  nav.links a:hover::after{width:100%;}
+  .nav-cta{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px; letter-spacing:0.05em; text-transform:uppercase;
+    background:var(--cover); color:var(--paper);
+    padding:10px 18px; border-radius:100px;
+    transition:background 0.3s ease, transform 0.3s ease;
+  }
+  .nav-cta:hover{background:var(--cover-dark); transform:translateY(-1px);}
+  .nav-toggle{display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:6px;}
+  .nav-toggle span{width:22px; height:2px; background:var(--ink);}
+  @media (max-width:900px){
+    nav.links{position:fixed; top:0; right:-100%; height:100vh; width:min(78vw,320px); background:var(--paper); flex-direction:column; justify-content:center; align-items:flex-start; padding:0 40px; transition:right 0.4s ease; box-shadow:-10px 0 30px rgba(0,0,0,0.15);}
+    nav.links.open{right:0;}
+    nav.links a{font-size:15px; padding:12px 0;}
+    .nav-toggle{display:flex;}
+    .nav-cta{display:none;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex; flex-direction:column; justify-content:center;
+    position:relative;
+    padding:150px 0 90px;
+  }
+  .hero-grid{display:grid; grid-template-columns:1.15fr 0.85fr; gap:60px; align-items:center;}
+  @media (max-width:980px){ .hero-grid{grid-template-columns:1fr;} }
+
+  .hero h1{
+    font-size:clamp(44px, 6.4vw, 84px);
+    line-height:0.98;
+    margin:22px 0 26px;
+  }
+  .hero h1 em{
+    font-style:italic; color:var(--cover); font-weight:560;
+  }
+  .hero p.lede{
+    font-size:19px; color:var(--ink-soft); max-width:46ch; margin-bottom:34px;
+  }
+  .hero-ctas{display:flex; gap:16px; flex-wrap:wrap;}
+  .btn{
+    font-family:'JetBrains Mono', monospace; font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
+    padding:15px 26px; border-radius:100px; display:inline-flex; align-items:center; gap:10px;
+    transition:transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  }
+  .btn-solid{background:var(--oxblood); color:var(--paper);}
+  .btn-solid:hover{transform:translateY(-2px); box-shadow:0 12px 24px -10px rgba(124,43,43,0.55);}
+  .btn-outline{border:1px solid var(--ink); color:var(--ink);}
+  .btn-outline:hover{background:var(--ink); color:var(--paper); transform:translateY(-2px);}
+
+  .hero-staff{position:relative;}
+  .clef-draw{
+    stroke-dasharray:900;
+    stroke-dashoffset:900;
+    animation:drawClef 2.2s ease forwards 0.3s;
+  }
+  @keyframes drawClef{ to{stroke-dashoffset:0;} }
+  .staff-line{
+    stroke-dasharray:600; stroke-dashoffset:600;
+    animation:drawLine 1.6s ease forwards;
+  }
+  @keyframes drawLine{ to{stroke-dashoffset:0;} }
+  .hero-note{
+    opacity:0; animation:popNote 0.5s ease forwards;
+  }
+  @keyframes popNote{ from{opacity:0; transform:translateY(8px) scale(0.6);} to{opacity:1; transform:translateY(0) scale(1);} }
+
+  /* ---------- Section shells ---------- */
+  section{position:relative; padding:120px 0;}
+  .section-head{max-width:660px; margin-bottom:64px;}
+  .section-head h2{font-size:clamp(32px,4vw,46px); margin-top:16px; line-height:1.08;}
+  .section-head p{color:var(--ink-soft); margin-top:18px; font-size:17px; max-width:56ch;}
+
+  .divider{
+    width:100%; height:56px; margin:0 auto;
+  }
+
+  [data-reveal]{
+    opacity:0; transform:translateY(34px);
+    transition:opacity 0.85s cubic-bezier(.16,.8,.3,1), transform 0.85s cubic-bezier(.16,.8,.3,1);
+  }
+  [data-reveal].in-view{opacity:1; transform:translateY(0);}
+  [data-reveal="stagger"] > *{
+    opacity:0; transform:translateY(28px);
+    transition:opacity 0.7s cubic-bezier(.16,.8,.3,1), transform 0.7s cubic-bezier(.16,.8,.3,1);
+  }
+  [data-reveal="stagger"].in-view > *{opacity:1; transform:translateY(0);}
+  [data-reveal="stagger"].in-view > *:nth-child(1){transition-delay:0.02s;}
+  [data-reveal="stagger"].in-view > *:nth-child(2){transition-delay:0.10s;}
+  [data-reveal="stagger"].in-view > *:nth-child(3){transition-delay:0.18s;}
+  [data-reveal="stagger"].in-view > *:nth-child(4){transition-delay:0.26s;}
+  [data-reveal="stagger"].in-view > *:nth-child(5){transition-delay:0.34s;}
+  [data-reveal="stagger"].in-view > *:nth-child(6){transition-delay:0.42s;}
+  [data-reveal="stagger"].in-view > *:nth-child(7){transition-delay:0.50s;}
+  [data-reveal="stagger"].in-view > *:nth-child(8){transition-delay:0.58s;}
+
+  /* ---------- About ---------- */
+  .about{background:var(--paper-deep);}
+  .about-grid{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:start;}
+  @media (max-width:900px){ .about-grid{grid-template-columns:1fr; gap:40px;} }
+  .about-text p{margin-bottom:18px; color:var(--ink-soft); font-size:17px;}
+  .about-text p:first-of-type{color:var(--ink); font-size:19px;}
+
+  .stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:8px;}
+  .stat{
+    background:var(--card); border-radius:18px; padding:28px 24px;
+    box-shadow:var(--shadow);
+  }
+  .stat .num{
+    font-family:'Fraunces', serif; font-weight:650; font-size:44px; color:var(--cover);
+    display:flex; align-items:baseline; gap:4px;
+  }
+  .stat .label{font-family:'JetBrains Mono', monospace; font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); margin-top:8px; display:block;}
+
+  /* ---------- Departments ---------- */
+  .dept-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:22px;}
+  @media (max-width:980px){ .dept-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .dept-grid{grid-template-columns:1fr;} }
+
+  .dept-card{
+    background:var(--card);
+    border-radius:20px;
+    padding:30px 26px;
+    box-shadow:var(--shadow);
+    transition:transform 0.4s cubic-bezier(.16,.8,.3,1), background 0.4s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .dept-card:hover{transform:translateY(-8px); background:var(--cover);}
+  .dept-card:hover .dept-icon svg{stroke:var(--brass-light);}
+  .dept-card:hover h3, .dept-card:hover p{color:var(--paper);}
+  .dept-icon{width:44px; height:44px; margin-bottom:20px;}
+  .dept-icon svg{width:100%; height:100%; stroke:var(--oxblood); fill:none; stroke-width:1.4; transition:stroke 0.4s ease;}
+  .dept-card h3{font-size:19px; margin-bottom:8px; transition:color 0.4s ease;}
+  .dept-card p{font-size:14.5px; color:var(--ink-soft); transition:color 0.4s ease;}
+
+  /* ---------- Ensembles ---------- */
+  .ensembles{background:var(--cover); color:var(--paper);}
+  .ensembles .section-head p{color:rgba(241,234,217,0.72);}
+  .ensembles .eyebrow{color:var(--brass-light);}
+  .ensembles .eyebrow::before{background:var(--brass-light);}
+  .ens-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:22px;}
+  @media (max-width:980px){ .ens-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .ens-grid{grid-template-columns:1fr;} }
+  .ens-card{
+    border-radius:20px; overflow:hidden;
+    background:rgba(250,246,234,0.05);
+    border:1px solid rgba(250,246,234,0.14);
+    transition:transform 0.4s cubic-bezier(.16,.8,.3,1), border-color 0.4s ease;
+  }
+  .ens-card:hover{transform:translateY(-8px); border-color:var(--brass-light);}
+  .ens-art{
+    height:150px; position:relative;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ens-art::before{
+    content:""; position:absolute; inset:0;
+  }
+  .ens-art .ring{
+    width:96px; height:96px; border-radius:50%;
+    border:1px solid rgba(250,246,234,0.35);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; z-index:1;
+    transition:transform 0.6s cubic-bezier(.16,.8,.3,1);
+  }
+  .ens-card:hover .ring{transform:rotate(50deg) scale(1.06);}
+  .ring::after{content:""; width:10px; height:10px; border-radius:50%; background:var(--brass-light);}
+  .ens-body{padding:22px 24px 26px;}
+  .ens-body h3{color:var(--paper); font-size:18px; margin-bottom:8px;}
+  .ens-body p{color:rgba(241,234,217,0.68); font-size:14px;}
+
+  .class-rows{border-top:1px solid var(--line); margin-bottom:56px;}
+  .class-row{
+    display:flex; align-items:center; gap:28px; flex-wrap:wrap;
+    padding:20px 4px; border-bottom:1px solid var(--line);
+  }
+  .class-label{
+    font-family:'Fraunces', serif; font-weight:650; font-size:18px;
+    width:150px; flex-shrink:0; color:var(--ink);
+  }
+  .class-row.lyceum .class-label{color:var(--oxblood);}
+  .class-pills{display:flex; gap:10px; flex-wrap:wrap;}
+  .pill{
+    font-family:'JetBrains Mono', monospace; font-size:13px; letter-spacing:0.03em;
+    padding:9px 18px; border-radius:100px;
+    background:var(--card); border:1px solid var(--line); color:var(--ink-soft);
+    cursor:pointer; user-select:none;
+    transition:transform 0.3s ease, background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .pill:hover{transform:translateY(-2px);}
+  .class-row.gymnasium .pill:hover{background:var(--cover); border-color:var(--cover); color:var(--paper);}
+  .class-row.lyceum .pill:hover{background:var(--oxblood); border-color:var(--oxblood); color:var(--paper);}
+  .class-row.gymnasium .pill.active{background:var(--cover); border-color:var(--cover); color:var(--paper); box-shadow:0 8px 18px -8px rgba(46,70,54,0.55);}
+  .class-row.lyceum .pill.active{background:var(--oxblood); border-color:var(--oxblood); color:var(--paper); box-shadow:0 8px 18px -8px rgba(124,43,43,0.55);}
+  .class-group-eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--ink-soft); margin:34px 0 4px; opacity:0.7;
+  }
+  .class-group-eyebrow:first-child{margin-top:18px;}
+
+  .schedule-title-bar{
+    display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--line);
+  }
+  .schedule-title-bar h3{font-size:19px; font-weight:650; transition:opacity 0.15s ease;}
+  .schedule-reset{display:none;}
+  .schedule-reset.visible{display:inline-block;}
+  .schedule-wrap{display:none;}
+  .schedule-wrap.visible{display:block;}
+  .schedule-placeholder{
+    border:1px dashed var(--line); border-radius:16px; padding:50px 30px; text-align:center;
+    color:var(--ink-soft); font-family:'JetBrains Mono', monospace; font-size:13px; letter-spacing:0.03em; text-transform:uppercase;
+  }
+  .schedule-placeholder.hidden{display:none;}
+  .schedule-reset{
+    font-family:'JetBrains Mono', monospace; font-size:11.5px; letter-spacing:0.05em; text-transform:uppercase;
+    background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:4px 0;
+    border-bottom:1px solid transparent; transition:color 0.3s ease, border-color 0.3s ease;
+  }
+  .schedule-reset:hover{color:var(--oxblood); border-color:var(--oxblood);}
+
+  /* ---------- Weekly schedule ---------- */
+  .schedule-wrap{overflow-x:auto; padding-bottom:6px; -webkit-overflow-scrolling:touch;}
+  .schedule-table{
+    width:100%; min-width:760px;
+    border-collapse:separate; border-spacing:0;
+  }
+  .schedule-table th, .schedule-table td{
+    border-bottom:1px solid var(--line);
+    border-right:1px solid var(--line);
+    padding:0; text-align:left; vertical-align:top;
+  }
+  .schedule-table th:first-child, .schedule-table td:first-child{border-left:1px solid var(--line);}
+  .schedule-table thead th{border-top:1px solid var(--line);}
+  .schedule-table thead th{
+    font-family:'JetBrains Mono', monospace; font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--ink-soft); font-weight:500; padding:14px 16px; background:var(--paper-deep);
+  }
+  .schedule-table thead th:first-child{background:transparent; border:none;}
+  .period-cell{
+    font-family:'JetBrains Mono', monospace; font-size:11.5px; color:var(--ink-soft);
+    padding:16px; white-space:nowrap; background:var(--paper-deep);
+  }
+  .period-cell .p-num{display:block; font-family:'Fraunces', serif; font-size:17px; color:var(--ink); font-weight:650;}
+  .lesson{
+    margin:6px; padding:12px 14px; border-radius:12px; font-size:13.5px; line-height:1.3;
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .lesson:hover{transform:translateY(-3px); box-shadow:var(--shadow);}
+  .lesson.general{background:var(--card); border:1px solid var(--line); color:var(--ink-soft);}
+  .lesson.music{background:var(--cover); color:var(--paper);}
+  .lesson.music .l-sub{color:rgba(241,234,217,0.65);}
+  .lesson .l-sub{display:block; font-family:'JetBrains Mono', monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; margin-top:4px; color:var(--ink-soft); opacity:0.8;}
+  .lesson.empty{background:transparent; border:1px dashed var(--line); color:var(--ink-soft); opacity:0.5; text-align:center;}
+
+  .schedule-legend{display:flex; gap:26px; margin-top:26px; flex-wrap:wrap;}
+  .legend-item{display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft);}
+  .legend-swatch{width:16px; height:16px; border-radius:5px;}
+  .legend-swatch.general{background:var(--card); border:1px solid var(--line);}
+  .legend-swatch.music{background:var(--cover);}
+
+  /* ---------- News / program ---------- */
+  .program-list{border-top:1px solid var(--line);}
+  .program-item{
+    display:grid; grid-template-columns:140px 1fr 160px; gap:26px; align-items:center;
+    padding:26px 4px; border-bottom:1px solid var(--line);
+    transition:padding-left 0.35s ease, background 0.35s ease;
+  }
+  .program-item:hover{padding-left:16px; background:rgba(124,43,43,0.045);}
+  @media (max-width:700px){
+    .program-item{grid-template-columns:1fr; gap:6px; padding:22px 4px;}
+  }
+  .program-date{font-family:'JetBrains Mono', monospace; font-size:12.5px; letter-spacing:0.05em; color:var(--oxblood); text-transform:uppercase;}
+  .program-item h3{font-size:20px; font-weight:560;}
+  .program-tag{
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--ink-soft); text-align:right;
+  }
+  @media (max-width:700px){ .program-tag{text-align:left;} }
+
+  /* ---------- Admissions ---------- */
+  .admissions{background:var(--paper-deep);}
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:0; counter-reset:step;}
+  @media (max-width:900px){ .steps{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .steps{grid-template-columns:1fr;} }
+  .step{
+    padding:0 26px 0 0; position:relative;
+  }
+  .step:not(:last-child){border-right:1px solid var(--line);}
+  @media (max-width:900px){ .step:nth-child(2n){border-right:none;} .step{border-bottom:1px solid var(--line); padding-bottom:26px; margin-bottom:26px;} }
+  .step .step-num{
+    font-family:'Fraunces', serif; font-size:15px; color:var(--brass); font-weight:650;
+    display:block; margin-bottom:14px;
+  }
+  .step h3{font-size:18.5px; margin-bottom:10px;}
+  .step p{font-size:14.5px; color:var(--ink-soft);}
+
+  /* ---------- Contact ---------- */
+  .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:70px;}
+  @media (max-width:900px){ .contact-grid{grid-template-columns:1fr; gap:44px;} }
+  .info-line{display:flex; gap:16px; padding:18px 0; border-bottom:1px solid var(--line);}
+  .info-line .k{font-family:'JetBrains Mono', monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); width:110px; flex-shrink:0; padding-top:2px;}
+  .info-line .v{font-size:16.5px;}
+  .map-btn{
+    margin-top:26px; display:inline-flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono', monospace; font-size:12.5px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--cover); border-bottom:1px solid var(--cover); padding-bottom:3px;
+    transition:gap 0.3s ease;
+  }
+  .map-btn:hover{gap:16px;}
+
+  form.contact-form{display:flex; flex-direction:column; gap:16px;}
+  .field{display:flex; flex-direction:column; gap:8px;}
+  .field label{font-family:'JetBrains Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft);}
+  .field input, .field textarea{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:13px 16px; font-family:'Literata', serif; font-size:15px; color:var(--ink);
+    transition:border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none; border-color:var(--oxblood); box-shadow:0 0 0 3px rgba(124,43,43,0.12);
+  }
+  .field textarea{resize:vertical; min-height:100px;}
+  .contact-form .btn{align-self:flex-start; border:none; cursor:pointer;}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--cover-dark); color:rgba(241,234,217,0.75); padding:60px 0 30px;}
+  .foot-grid{display:flex; justify-content:space-between; align-items:flex-start; gap:40px; flex-wrap:wrap; padding-bottom:36px; border-bottom:1px solid rgba(241,234,217,0.14);}
+  footer .brand-text{color:var(--paper);}
+  footer .brand-text span{color:rgba(241,234,217,0.55);}
+  .foot-cols{display:flex; gap:60px; flex-wrap:wrap;}
+  .foot-col h4{font-family:'JetBrains Mono', monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.08em; color:rgba(241,234,217,0.5); margin-bottom:14px; font-weight:500;}
+  .foot-col a{display:block; font-size:14.5px; color:rgba(241,234,217,0.82); margin-bottom:10px; transition:color 0.3s ease;}
+  .foot-col a:hover{color:var(--brass-light);}
+  .foot-bottom{display:flex; justify-content:space-between; padding-top:24px; font-size:12.5px; color:rgba(241,234,217,0.45); flex-wrap:wrap; gap:10px;}
+
+  ::selection{background:var(--oxblood); color:var(--paper);}
+</style>
+</head>
+<body>
+
+<div class="staff-rail" aria-hidden="true">
+  <svg viewBox="0 0 34 800" preserveAspectRatio="none">
+    <line class="rail-line" x1="17" y1="0" x2="17" y2="800"/>
+    <line class="rail-progress" id="railProgress" x1="17" y1="0" x2="17" y2="800" stroke-dasharray="800 800" stroke-dashoffset="800"/>
+    <g class="rail-note" id="railNote" transform="translate(17,0)">
+      <ellipse cx="0" cy="0" rx="6" ry="4.6" fill="var(--oxblood)" transform="rotate(-18)"/>
+      <line x1="5.6" y1="-2" x2="5.6" y2="-18" stroke="var(--oxblood)" stroke-width="1.4"/>
+    </g>
+  </svg>
+</div>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-mark">&#119070;</div>
+      <div class="brand-text">Μουσικό Σχολείο<br>Καρδίτσας<span>Γυμνάσιο &mdash; Λύκειο Μουσικής Κατεύθυνσης</span></div>
+    </div>
+    <nav class="links" id="navLinks">
+      <a href="#about">Το Σχολείο</a>
+      <a href="#departments">Τμήματα</a>
+      <a href="#ensembles">Σύνολα</a>
+      <a href="#schedule">Πρόγραμμα</a>
+      <a href="#news">Νέα</a>
+      <a href="#admissions">Εισαγωγή</a>
+      <a href="#contact" class="nav-cta">Επικοινωνία</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Μενού"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Δημόσιο Σχολείο &middot; Καρδίτσα, Θεσσαλία</span>
+      <h1>Εδώ, κάθε<br>μάθημα έχει<br><em>ρυθμό.</em></h1>
+      <p class="lede">Το Μουσικό Σχολείο Καρδίτσας συνδυάζει τη Γενική Παιδεία με ουσιαστική μουσική εκπαίδευση, εδώ και 26 χρόνια &mdash; ένα σχολείο όπου το πεντάγραμμο μοιράζεται τη μέρα των μαθητών με τον πίνακα.</p>
+      <div class="hero-ctas">
+        <a href="#admissions" class="btn btn-solid">Διαδικασία Εισαγωγής</a>
+        <a href="#departments" class="btn btn-outline">Τα Τμήματα Οργάνων</a>
+      </div>
+    </div>
+    <div class="hero-staff">
+      <svg viewBox="0 0 420 380" width="100%" aria-hidden="true">
+        <g stroke="var(--ink)" stroke-opacity="0.5" stroke-width="1.4">
+          <line class="staff-line" x1="10" y1="70" x2="410" y2="70" style="animation-delay:0.1s"/>
+          <line class="staff-line" x1="10" y1="110" x2="410" y2="110" style="animation-delay:0.2s"/>
+          <line class="staff-line" x1="10" y1="150" x2="410" y2="150" style="animation-delay:0.3s"/>
+          <line class="staff-line" x1="10" y1="190" x2="410" y2="190" style="animation-delay:0.4s"/>
+          <line class="staff-line" x1="10" y1="230" x2="410" y2="230" style="animation-delay:0.5s"/>
+        </g>
+        <path class="clef-draw" d="M60 230 C40 210 40 180 58 165 C80 147 110 155 112 180 C114 205 90 218 75 205 C63 195 68 178 84 178 C96 178 100 190 90 196 M84 178 L84 90 C84 68 108 62 112 82 C115 98 96 104 90 92" fill="none" stroke="var(--oxblood)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <g fill="var(--cover)">
+          <ellipse class="hero-note" style="animation-delay:1.6s" cx="200" cy="150" rx="9" ry="7" transform="rotate(-18 200 150)"/>
+          <line style="opacity:0" x1="208" y1="146" x2="208" y2="90" stroke="var(--cover)" stroke-width="2"/>
+          <ellipse class="hero-note" style="animation-delay:1.8s" cx="250" cy="110" rx="9" ry="7" transform="rotate(-18 250 110)"/>
+          <ellipse class="hero-note" style="animation-delay:2.0s" cx="300" cy="190" rx="9" ry="7" transform="rotate(-18 300 190)"/>
+          <ellipse class="hero-note" style="animation-delay:2.2s" cx="345" cy="150" rx="9" ry="7" transform="rotate(-18 345 150)"/>
+        </g>
+        <g class="hero-note" style="animation-delay:1.6s" stroke="var(--cover)" stroke-width="2">
+          <line x1="208.8" y1="145" x2="208.8" y2="95"/>
+        </g>
+        <g class="hero-note" style="animation-delay:1.8s" stroke="var(--cover)" stroke-width="2">
+          <line x1="258.8" y1="105" x2="258.8" y2="60"/>
+        </g>
+        <g class="hero-note" style="animation-delay:2.0s" stroke="var(--cover)" stroke-width="2">
+          <line x1="308.8" y1="185" x2="308.8" y2="140"/>
+        </g>
+        <g class="hero-note" style="animation-delay:2.2s" stroke="var(--cover)" stroke-width="2">
+          <line x1="353.8" y1="145" x2="353.8" y2="100"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div data-reveal>
+        <span class="eyebrow">Δύο Παιδείες, Ένα Σχολείο</span>
+        <h2 style="margin-top:16px; font-size:clamp(28px,3.4vw,38px);">Γενική μόρφωση το πρωί.<br>Μουσική σκέψη όλη μέρα.</h2>
+        <div class="about-text" style="margin-top:26px;">
+          <p>Το σχολείο λειτουργεί όπως κάθε δημόσιο Γυμνάσιο και Λύκειο, με τα ίδια μαθήματα Γενικής Παιδείας &mdash; απλώς με μία ουσιώδη προσθήκη: ώρες Μουσικής Παιδείας ενταγμένες στο ωρολόγιο πρόγραμμα, όχι μετά το κουδούνι.</p>
+          <p>Οι αίθουσες Γενικής και Μουσικής Παιδείας στεγάζονται σε δύο ξεχωριστά κτήρια, σχεδιασμένα ώστε ο ήχος να έχει τον χώρο του: ατομικά όργανα, θεωρητικά, σύνολα και χορωδία, δίπλα-δίπλα με τη Γλώσσα και τα Μαθηματικά.</p>
+          <p>Οι μαθητές δεν μαθαίνουν απλώς νότες &mdash; μαθαίνουν να ακούν ο ένας τον άλλον, μέσα κι έξω από την αίθουσα.</p>
+        </div>
+      </div>
+      <div>
+        <div class="stat-grid" data-reveal="stagger">
+          <div class="stat">
+            <div class="num" data-count="26">0</div>
+            <span class="label">Χρόνια Λειτουργίας</span>
+          </div>
+          <div class="stat">
+            <div class="num"><span data-count="9">0</span>+</div>
+            <span class="label">Τμήματα Οργάνων</span>
+          </div>
+          <div class="stat">
+            <div class="num">2</div>
+            <span class="label">Κτήρια Παιδείας</span>
+          </div>
+          <div class="stat">
+            <div class="num"><span data-count="4">0</span></div>
+            <span class="label">Σύνολα &amp; Ορχήστρες</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- divider -->
+<svg class="divider" viewBox="0 0 1180 56" preserveAspectRatio="none" aria-hidden="true">
+  <line x1="0" y1="28" x2="1180" y2="28" stroke="var(--line)" stroke-width="1"/>
+</svg>
+
+<!-- ================= DEPARTMENTS ================= -->
+<section id="departments">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Τμήματα Οργάνων</span>
+      <h2>Οκτώ δρόμοι για να φτάσεις στη νότα.</h2>
+      <p>Κάθε μαθητής επιλέγει κύριο όργανο και εξελίσσεται μέσα από ατομικά μαθήματα, θεωρητικά και συνολική μουσική πράξη.</p>
+    </div>
+
+    <div class="dept-grid" data-reveal="stagger">
+      <div class="dept-card">
+        <div class="dept-icon"><svg viewBox="0 0 48 48"><path d="M14 34 Q10 38 14 42 Q18 44 20 40 L26 20"/><circle cx="16" cy="38" r="4"/><path d="M26 20 Q30 8 40 6 Q38 14 30 18 Q28 19 26 20 Z"/></svg></div>
+        <h3>Έγχορδα</h3>
+        <p>Βιολί, βιόλα, βιολοντσέλο, κόντραμπασο, κιθάρα &amp; μπάσο.</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon"><svg viewBox="0 0 48 48"><rect x="8" y="20" width="32" height="6" rx="3"/><circle cx="12" cy="23" r="2" fill="currentColor" stroke="none"/><circle cx="20" cy="23" r="2" fill="currentColor" stroke="none"/><circle cx="28" cy="23" r="2" fill="currentColor" stroke="none"/><path d="M40 23 Q44 23 44 18"/></svg></div>
+        <h3>Πνευστά Ξύλινα</h3>
+        <p>Φλάουτο, κλαρινέτο, όμποε, φαγκότο &amp; σαξόφωνο.</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon"><svg viewBox="0 0 48 48"><path d="M8 30 Q8 18 20 18 L30 18 Q40 18 40 26 Q40 32 34 32 L20 32"/><circle cx="12" cy="34" r="5"/></svg></div>
+        <h3>Πνευστά Χάλκινα</h3>
+        <p>Τρομπέτα, κόρνο, τρομπόνι &amp; τούμπα.</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon"><svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="20" rx="2"/><line x1="12" y1="14" x2="12" y2="34"/><line x1="18" y1="14" x2="18" y2="34"/><line x1="24" y1="14" x2="24" y2="34"/><line x1="30" y1="14" x2="30" y2="34"/><line x1="36" y1="14" x2="36" y2="34"/></svg></div>
+        <h3>Πληκτροφόνα</h3>
+        <p>Πιάνο κλασικό, τζαζ πιάνο &amp; ακορντεόν.</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon"><svg viewBox="0 0 48 48"><ellipse cx="24" cy="16" rx="14" ry="6"/><path d="M10 16 L10 30 Q10 36 24 36 Q38 36 38 30 L38 16"/><line x1="24" y1="10" x2="24" y2="4"/></svg></div>
+        <h3>Κρουστά</h3>
+        <p>Τύμπανα ορχήστρας, drum set &amp; παραδοσιακά κρουστά.</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon"><svg viewBox="0 0 48 48"><path d="M12 40 Q12 20 24 8 Q36 20 36 40 Z"/><line x1="24" y1="8" x2="24" y2="40"/><path d="M12 40 Q24 44 36 40"/></svg></div>
+        <h3>Παράδοση &amp; Βυζαντινή</h3>
+        <p>Κλαρίνο, λαούτο, παραδοσιακό τραγούδι &amp; βυζαντινή ψαλτική.</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon"><svg viewBox="0 0 48 48"><path d="M24 6 Q30 6 30 14 L30 24 Q30 32 24 32 Q18 32 18 24 L18 14 Q18 6 24 6 Z"/><path d="M14 22 Q14 36 24 36 Q34 36 34 22"/><line x1="24" y1="36" x2="24" y2="44"/><line x1="16" y1="44" x2="32" y2="44"/></svg></div>
+        <h3>Φωνητική</h3>
+        <p>Ατομική φωνητική εκπαίδευση &amp; χορωδιακή πράξη.</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon"><svg viewBox="0 0 48 48"><line x1="6" y1="14" x2="42" y2="14"/><line x1="6" y1="22" x2="42" y2="22"/><line x1="6" y1="30" x2="42" y2="30"/><ellipse cx="18" cy="30" rx="4" ry="3"/><line x1="22" y1="29" x2="22" y2="12"/><ellipse cx="32" cy="22" rx="4" ry="3"/><line x1="36" y1="21" x2="36" y2="8"/></svg></div>
+        <h3>Θεωρητικά</h3>
+        <p>Αρμονία, αντίστιξη, μορφολογία &amp; ιστορία της μουσικής.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ENSEMBLES ================= -->
+<section class="ensembles" id="ensembles">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Σύνολα &amp; Ορχήστρα</span>
+      <h2>Η μουσική γίνεται ουσιαστική όταν παίζεται μαζί.</h2>
+      <p>Κάθε μαθητής συμμετέχει σε ένα τουλάχιστον σύνολο &mdash; εκεί όπου η ατομική εξάσκηση μετατρέπεται σε κοινή γλώσσα.</p>
+    </div>
+    <div class="ens-grid" data-reveal="stagger">
+      <div class="ens-card">
+        <div class="ens-art" style="background:linear-gradient(135deg, #3E5A47, #24352A);"><div class="ring"></div></div>
+        <div class="ens-body"><h3>Ορχήστρα Νέων</h3><p>Συμφωνικό ρεπερτόριο, από κλασικό έως σύγχρονο.</p></div>
+      </div>
+      <div class="ens-card">
+        <div class="ens-art" style="background:linear-gradient(135deg, #6E3A34, #3E211E);"><div class="ring"></div></div>
+        <div class="ens-body"><h3>Χορωδία</h3><p>Πολυφωνικό ρεπερτόριο &amp; παραδοσιακό τραγούδι.</p></div>
+      </div>
+      <div class="ens-card">
+        <div class="ens-art" style="background:linear-gradient(135deg, #7A5A2E, #3E2E17);"><div class="ring"></div></div>
+        <div class="ens-body"><h3>Σύνολο Παράδοσης</h3><p>Θεσσαλικοί &amp; πανελλήνιοι μουσικοί δρόμοι.</p></div>
+      </div>
+      <div class="ens-card">
+        <div class="ens-art" style="background:linear-gradient(135deg, #2E4A5A, #17262E);"><div class="ring"></div></div>
+        <div class="ens-body"><h3>Τζαζ Σύνολο</h3><p>Αυτοσχεδιασμός, groove &amp; σύγχρονη γραφή.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WEEKLY SCHEDULE ================= -->
+<section id="schedule">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Ωρολόγιο Πρόγραμμα</span>
+      <h2>Μια τυπική εβδομάδα στο σχολείο.</h2>
+      <p>Η Γενική Παιδεία καλύπτει το πρωινό μεγαλύτερο μέρος της ημέρας· η Μουσική Παιδεία ακολουθεί με ατομικό όργανο, θεωρητικά και σύνολα &mdash; ενταγμένη στο ίδιο ωράριο, όχι έξω από αυτό.</p>
+    </div>
+
+    <div class="class-group-eyebrow" data-reveal>Γυμνάσιο</div>
+    <div class="class-rows" data-reveal="stagger">
+      <div class="class-row gymnasium">
+        <span class="class-label">Α&rsquo; Τάξη</span>
+        <div class="class-pills"><span class="pill" data-grade="A">Α1</span><span class="pill" data-grade="A">Α2</span><span class="pill" data-grade="A">Α3</span></div>
+      </div>
+      <div class="class-row gymnasium">
+        <span class="class-label">Β&rsquo; Τάξη</span>
+        <div class="class-pills"><span class="pill" data-grade="B">Β1</span><span class="pill" data-grade="B">Β2</span><span class="pill" data-grade="B">Β3</span></div>
+      </div>
+      <div class="class-row gymnasium">
+        <span class="class-label">Γ&rsquo; Τάξη</span>
+        <div class="class-pills"><span class="pill" data-grade="G">Γ1</span><span class="pill" data-grade="G">Γ2</span><span class="pill" data-grade="G">Γ3</span></div>
+      </div>
+    </div>
+
+    <div class="class-group-eyebrow" data-reveal>Λύκειο</div>
+    <div class="class-rows" data-reveal="stagger">
+      <div class="class-row lyceum">
+        <span class="class-label">Α&rsquo; Τάξη</span>
+        <div class="class-pills"><span class="pill" data-grade="AL">ΑΛ1</span><span class="pill" data-grade="AL">ΑΛ2</span><span class="pill" data-grade="AL">ΑΛ3</span></div>
+      </div>
+      <div class="class-row lyceum">
+        <span class="class-label">Β&rsquo; Τάξη</span>
+        <div class="class-pills"><span class="pill" data-grade="BL">ΒΛ1</span><span class="pill" data-grade="BL">ΒΛ2</span></div>
+      </div>
+      <div class="class-row lyceum">
+        <span class="class-label">Γ&rsquo; Τάξη</span>
+        <div class="class-pills"><span class="pill" data-grade="GL">ΓΛ1</span><span class="pill" data-grade="GL">ΓΛ2</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-title-bar" data-reveal>
+      <h3 id="scheduleTitle">Επιλέξτε τμήμα παραπάνω για να δείτε το πρόγραμμά του</h3>
+      <button id="scheduleReset" class="schedule-reset" type="button">Προβολή όλων των τάξεων &times;</button>
+    </div>
+
+    <div class="schedule-placeholder" id="schedulePlaceholder">&#9834; Δεν έχει επιλεγεί τμήμα ακόμα</div>
+
+    <div class="schedule-wrap" id="scheduleAnchor" data-reveal>
+      <table class="schedule-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Δευτέρα</th>
+            <th>Τρίτη</th>
+            <th>Τετάρτη</th>
+            <th>Πέμπτη</th>
+            <th>Παρασκευή</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="period-cell"><span class="p-num">1η</span>08:15&ndash;09:00</td>
+            <td><div class="lesson general">Νέα Ελληνικά</div></td>
+            <td><div class="lesson general">Μαθηματικά</div></td>
+            <td><div class="lesson general">Αρχαία Ελληνικά</div></td>
+            <td><div class="lesson general">Φυσική</div></td>
+            <td><div class="lesson general">Ιστορία</div></td>
+          </tr>
+          <tr>
+            <td class="period-cell"><span class="p-num">2η</span>09:05&ndash;09:50</td>
+            <td><div class="lesson general">Νέα Ελληνικά</div></td>
+            <td><div class="lesson general">Μαθηματικά</div></td>
+            <td><div class="lesson general">Αγγλικά</div></td>
+            <td><div class="lesson general">Φυσική</div></td>
+            <td><div class="lesson general">Θρησκευτικά</div></td>
+          </tr>
+          <tr>
+            <td class="period-cell"><span class="p-num">3η</span>10:00&ndash;10:45</td>
+            <td><div class="lesson music">Θεωρητικά<span class="l-sub">Αρμονία</span></div></td>
+            <td><div class="lesson general">Γεωγραφία</div></td>
+            <td><div class="lesson music">Θεωρητικά<span class="l-sub">Μορφολογία</span></div></td>
+            <td><div class="lesson general">Πληροφορική</div></td>
+            <td><div class="lesson general">Χημεία</div></td>
+          </tr>
+          <tr>
+            <td class="period-cell"><span class="p-num">4η</span>10:55&ndash;11:40</td>
+            <td><div class="lesson music">Κύριο Όργανο<span class="l-sub">Ατομικό</span></div></td>
+            <td><div class="lesson music">Κύριο Όργανο<span class="l-sub">Ατομικό</span></div></td>
+            <td><div class="lesson general">Αγγλικά</div></td>
+            <td><div class="lesson music">Κύριο Όργανο<span class="l-sub">Ατομικό</span></div></td>
+            <td><div class="lesson music">Ιστορία Μουσικής</div></td>
+          </tr>
+          <tr>
+            <td class="period-cell"><span class="p-num">5η</span>11:50&ndash;12:35</td>
+            <td><div class="lesson music">Σύνολο<span class="l-sub">Ορχήστρα / Χορωδία</span></div></td>
+            <td><div class="lesson general">Φυσική Αγωγή</div></td>
+            <td><div class="lesson music">Σύνολο<span class="l-sub">Ορχήστρα / Χορωδία</span></div></td>
+            <td><div class="lesson general">Καλλιτεχνικά</div></td>
+            <td><div class="lesson music">Βυζαντινή Μουσική</div></td>
+          </tr>
+          <tr>
+            <td class="period-cell"><span class="p-num">6η</span>12:45&ndash;13:30</td>
+            <td><div class="lesson empty">&mdash;</div></td>
+            <td><div class="lesson music">Δεύτερο Όργανο</div></td>
+            <td><div class="lesson empty">&mdash;</div></td>
+            <td><div class="lesson music">Μουσική Τεχνολογία</div></td>
+            <td><div class="lesson empty">&mdash;</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="schedule-legend" data-reveal>
+      <div class="legend-item"><span class="legend-swatch general"></span>Γενική Παιδεία</div>
+      <div class="legend-item"><span class="legend-swatch music"></span>Μουσική Παιδεία</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= NEWS ================= -->
+<section id="news">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Πρόγραμμα &amp; Νέα</span>
+      <h2>Τι παίζεται φέτος.</h2>
+    </div>
+    <div class="program-list" data-reveal="stagger">
+      <div class="program-item">
+        <span class="program-date">Οκτ 2026</span>
+        <h3>Κινητικότητα Erasmus+ στην Ιταλία</h3>
+        <span class="program-tag">Πρόγραμμα</span>
+      </div>
+      <div class="program-item">
+        <span class="program-date">Μάιος 2026</span>
+        <h3>Ανοιχτή Μέρα Γνωριμίας για γονείς ΣΤ&rsquo; Δημοτικού</h3>
+        <span class="program-tag">Εκδήλωση</span>
+      </div>
+      <div class="program-item">
+        <span class="program-date">Ιούν 2026</span>
+        <h3>Συναυλία Αποφοίτων &mdash; Αμφιθέατρο Σχολείου</h3>
+        <span class="program-tag">Συναυλία</span>
+      </div>
+      <div class="program-item">
+        <span class="program-date">Ιούλ 2026</span>
+        <h3>Αποτελέσματα Κατατακτήριων Εξετάσεων</h3>
+        <span class="program-tag">Ανακοίνωση</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ADMISSIONS ================= -->
+<section class="admissions" id="admissions">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Εισαγωγή</span>
+      <h2>Πώς γίνεται η εισαγωγή στο σχολείο.</h2>
+      <p>Η εισαγωγή γίνεται μέσω κατατακτήριων εξετάσεων, ανοιχτών σε μαθητές που ολοκληρώνουν την ΣΤ&rsquo; Δημοτικού.</p>
+    </div>
+    <div class="steps" data-reveal="stagger">
+      <div class="step">
+        <span class="step-num">01</span>
+        <h3>Αίτηση Συμμετοχής</h3>
+        <p>Υποβολή αίτησης εντός της προθεσμίας που ορίζει η εγκύκλιος του Υπουργείου.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <h3>Κατατακτήριες Εξετάσεις</h3>
+        <p>Δοκιμασίες μουσικής αντίληψης &mdash; ρυθμός, ακοή, φωνητική άρθρωση.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <h3>Αποτελέσματα</h3>
+        <p>Ανάρτηση αποτελεσμάτων &amp; ενημέρωση οικογενειών.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <h3>Εγγραφή</h3>
+        <p>Οριστικοποίηση εγγραφής &amp; επιλογή κύριου οργάνου.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div data-reveal>
+        <span class="eyebrow">Επικοινωνία</span>
+        <h2 style="margin-top:16px; font-size:clamp(28px,3.4vw,38px);">Βρείτε μας στην Καρδίτσα.</h2>
+        <div style="margin-top:30px;">
+          <div class="info-line"><span class="k">Διεύθυνση</span><span class="v">Αγίου Βησσαρίου 37, Καρδίτσα, Τ.Κ. 43131</span></div>
+          <div class="info-line"><span class="k">Τηλέφωνο</span><span class="v">24410 73970</span></div>
+          <div class="info-line"><span class="k">Email</span><span class="v">gymmkard@sch.gr</span></div>
+        </div>
+        <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Αγίου+Βησσαρίου+37+Καρδίτσα" target="_blank" rel="noopener">Άνοιγμα στο Google Maps &rarr;</a>
+      </div>
+      <div data-reveal>
+        <form class="contact-form" onsubmit="event.preventDefault(); this.querySelector('.btn').textContent='Ευχαριστούμε!';">
+          <div class="field">
+            <label for="name">Ονοματεπώνυμο</label>
+            <input id="name" type="text" placeholder="π.χ. Μαρία Παπαδοπούλου" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" required>
+          </div>
+          <div class="field">
+            <label for="msg">Μήνυμα</label>
+            <textarea id="msg" placeholder="Πείτε μας τι σας ενδιαφέρει..."></textarea>
+          </div>
+          <button class="btn btn-solid" type="submit">Αποστολή Μηνύματος</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="brand">
+        <div class="brand-mark">&#119070;</div>
+        <div class="brand-text">Μουσικό Σχολείο<br>Καρδίτσας<span>Γυμνάσιο &mdash; Λύκειο Μουσικής Κατεύθυνσης</span></div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h4>Σχολείο</h4>
+          <a href="#about">Το Σχολείο</a>
+          <a href="#departments">Τμήματα</a>
+          <a href="#ensembles">Σύνολα</a>
+        </div>
+        <div class="foot-col">
+          <h4>Πληροφορίες</h4>
+          <a href="#news">Νέα</a>
+          <a href="#admissions">Εισαγωγή</a>
+          <a href="#contact">Επικοινωνία</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; Μουσικό Σχολείο Καρδίτσας</span>
+      <span>Αγίου Βησσαρίου 37, Καρδίτσα 43131</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll state
+  const header = document.getElementById('siteHeader');
+  const railProgress = document.getElementById('railProgress');
+  const railNote = document.getElementById('railNote');
+  const railLen = 800;
+
+  function onScroll(){
+    header.classList.toggle('scrolled', window.scrollY > 40);
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docH > 0 ? Math.min(window.scrollY / docH, 1) : 0;
+    const offset = railLen - (railLen * pct);
+    railProgress.style.strokeDashoffset = offset;
+    railNote.setAttribute('transform', 'translate(17,' + (pct*railLen) + ')');
+  }
+
+  let scrollTicking = false;
+  function requestScrollUpdate(){
+    if(!scrollTicking){
+      requestAnimationFrame(() => { onScroll(); scrollTicking = false; });
+      scrollTicking = true;
+    }
+  }
+  window.addEventListener('scroll', requestScrollUpdate, {passive:true});
+  onScroll();
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('[data-reveal]');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.15, rootMargin:'0px 0px -60px 0px'});
+  revealEls.forEach(el => io.observe(el));
+
+  // Number counters
+  const counters = document.querySelectorAll('[data-count]');
+  const counterIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const el = entry.target;
+        const target = parseInt(el.getAttribute('data-count'), 10);
+        let cur = 0;
+        const dur = 1200;
+        const start = performance.now();
+        function tick(now){
+          const p = Math.min((now-start)/dur, 1);
+          const eased = 1 - Math.pow(1-p, 3);
+          el.textContent = Math.round(eased * target);
+          if(p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        counterIO.unobserve(el);
+      }
+    });
+  }, {threshold:0.5});
+  counters.forEach(el => counterIO.observe(el));
+  // ---------- Per-class weekly schedule ----------
+  const g = (n) => ({t:'g', n});
+  const m = (n, s) => ({t:'m', n, s});
+  const e = null;
+
+  const SCHEDULES = {
+    A: [
+      ['1η','08:15–08:55', [g('Νέα Ελληνικά'), g('Μαθηματικά'), g('Αρχαία Ελληνικά'), g('Φυσική'), g('Ιστορία')]],
+      ['2η','09:05–09:45', [g('Νέα Ελληνικά'), g('Μαθηματικά'), g('Αγγλικά'), g('Φυσική'), g('Θρησκευτικά')]],
+      ['3η','09:55–10:35', [m('Θεωρητικά','Στοιχεία Μουσικής'), g('Γεωγραφία'), m('Θεωρητικά','Στοιχεία Μουσικής'), g('Πληροφορική'), g('Γυμναστική')]],
+      ['4η','10:45–11:25', [m('Κύριο Όργανο','Ατομικό'), m('Κύριο Όργανο','Ατομικό'), g('Αγγλικά'), m('Κύριο Όργανο','Ατομικό'), m('Ιστορία Μουσικής')]],
+      ['5η','11:35–12:05', [m('Σύνολο','Παιδική Χορωδία'), g('Φυσική Αγωγή'), m('Σύνολο','Παιδική Χορωδία'), g('Καλλιτεχνικά'), e]],
+      ['6η','12:10–12:50', [e, e, e, e, e]],
+    ],
+    B: [
+      ['1η','08:15–08:55', [g('Νέα Ελληνικά'), g('Μαθηματικά'), g('Αρχαία Ελληνικά'), g('Φυσική'), g('Ιστορία')]],
+      ['2η','09:05–09:45', [g('Νέα Ελληνικά'), g('Μαθηματικά'), g('Αγγλικά'), g('Χημεία'), g('Θρησκευτικά')]],
+      ['3η','09:55–10:35', [m('Θεωρητικά','Αρμονία Ι'), g('Γεωγραφία'), m('Θεωρητικά','Αρμονία Ι'), g('Πληροφορική'), g('Β΄ Ξένη Γλώσσα')]],
+      ['4η','10:45–11:25', [m('Κύριο Όργανο'), m('Κύριο Όργανο'), m('Δεύτερο Όργανο'), m('Κύριο Όργανο'), m('Ιστορία Μουσικής')]],
+      ['5η','11:35–12:05', [m('Σύνολο','Ορχήστρα Νέων'), g('Φυσική Αγωγή'), m('Σύνολο','Ορχήστρα Νέων'), g('Καλλιτεχνικά'), m('Δεύτερο Όργανο')]],
+      ['6η','12:10–12:50', [e, e, e, e, e]],
+    ],
+    G: [
+      ['1η','08:15–08:55', [g('Νέα Ελληνικά'), g('Μαθηματικά'), g('Αρχαία Ελληνικά'), g('Φυσική'), g('Ιστορία')]],
+      ['2η','09:05–09:45', [g('Νέα Ελληνικά'), g('Μαθηματικά'), g('Αγγλικά'), g('Χημεία'), g('Κοιν. & Πολιτική Αγωγή')]],
+      ['3η','09:55–10:35', [m('Θεωρητικά','Αρμονία ΙΙ'), g('Γεωγραφία'), m('Θεωρητικά','Αντίστιξη'), g('Πληροφορική'), g('Β΄ Ξένη Γλώσσα')]],
+      ['4η','10:45–11:25', [m('Κύριο Όργανο'), m('Κύριο Όργανο'), m('Δεύτερο Όργανο'), m('Κύριο Όργανο'), m('Ιστορία Μουσικής')]],
+      ['5η','11:35–12:05', [m('Σύνολο','Ορχήστρα Νέων'), g('Φυσική Αγωγή'), m('Σύνολο','Χορωδία'), m('Βυζαντινή Μουσική'), m('Δεύτερο Όργανο')]],
+      ['6η','12:10–12:50', [m('Μουσική Τεχνολογία'), e, e, e, e]],
+    ],
+    AL: [
+      ['1η','08:15–08:55', [g('Νέα Ελληνικά'), g('Άλγεβρα'), g('Αρχαία Ελληνικά'), g('Φυσική'), g('Ιστορία')]],
+      ['2η','09:05–09:45', [g('Νέα Ελληνικά'), g('Γεωμετρία'), g('Αγγλικά'), g('Χημεία'), g('Θρησκευτικά')]],
+      ['3η','09:55–10:35', [m('Θεωρητικά','Αρμονία ΙΙΙ'), g('Βιολογία'), m('Θεωρητικά','Μορφολογία'), g('Πληροφορική'), g('Οικονομία')]],
+      ['4η','10:45–11:25', [m('Κύριο Όργανο'), m('Κύριο Όργανο'), m('Δεύτερο Όργανο'), m('Κύριο Όργανο'), m('Ιστορία Μουσικής')]],
+      ['5η','11:35–12:05', [m('Σύνολο','Ορχήστρα Νέων'), g('Φυσική Αγωγή'), m('Σύνολο','Τζαζ Σύνολο'), m('Βυζαντινή Μουσική'), m('Μουσική Τεχνολογία')]],
+      ['6η','12:10–12:50', [m('Πρακτική Αρμονίου'), e, e, e, e]],
+    ],
+    BL: [
+      ['1η','08:15–08:55', [g('Νέα Ελληνικά'), g('Μαθηματικά Ομάδας'), g('Αρχαία Ελληνικά Ομάδας'), g('Φυσική Ομάδας'), g('Ιστορία')]],
+      ['2η','09:05–09:45', [g('Νέα Ελληνικά'), g('Μαθηματικά Ομάδας'), g('Αγγλικά'), g('Βιολογία Ομάδας'), g('Λατινικά')]],
+      ['3η','09:55–10:35', [m('Θεωρητικά','Αντίστιξη ΙΙ'), g('Οικονομικά'), m('Θεωρητικά','Ενορχήστρωση'), g('Πληροφορική'), g('Πολιτική Παιδεία')]],
+      ['4η','10:45–11:25', [m('Κύριο Όργανο'), m('Κύριο Όργανο'), m('Δεύτερο Όργανο'), m('Κύριο Όργανο'), m('Ιστορία Μουσικής')]],
+      ['5η','11:35–12:05', [m('Σύνολο','Ορχήστρα Νέων'), g('Φυσική Αγωγή'), m('Σύνολο','Τζαζ Σύνολο'), m('Βυζαντινή Μουσική'), m('Μουσική Τεχνολογία')]],
+      ['6η','12:10–12:50', [e, e, e, e, e]],
+    ],
+    GL: [
+      ['1η','08:15–08:55', [g('Νεοελλ. Γλώσσα & Λογοτεχνία'), g('Μαθηματικά Ομάδας'), g('Αρχαία Ελληνικά Ομάδας'), g('Φυσική Ομάδας'), g('Βιολογία Ομάδας')]],
+      ['2η','09:05–09:45', [g('Νεοελλ. Γλώσσα & Λογοτεχνία'), g('Μαθηματικά Ομάδας'), g('Ιστορία Ομάδας'), g('Χημεία Ομάδας'), g('Οικονομία Ομάδας')]],
+      ['3η','09:55–10:35', [m('Θεωρητικά','Αρμονία IV'), g('Ξένη Γλώσσα'), m('Θεωρητικά','Μορφολογία ΙΙ'), g('Πληροφορική'), g('Θρησκευτικά')]],
+      ['4η','10:45–11:25', [m('Κύριο Όργανο'), m('Κύριο Όργανο'), m('Δεύτερο Όργανο'), m('Κύριο Όργανο'), m('Ιστορία Μουσικής')]],
+      ['5η','11:35–12:05', [m('Σύνολο','Ορχήστρα Αποφοίτων'), g('Φυσική Αγωγή'), m('Σύνολο','Χορωδία'), m('Βυζαντινή Μουσική'), e]],
+      ['6η','12:10–12:50', [e, e, e, e, e]],
+    ],
+  };
+
+  // Extra afternoon periods: Δευτέρα & Πέμπτη έχουν 9 ώρες, οι υπόλοιπες μέρες 8
+  const AFTERNOON = [
+    ['7η','13:10–13:40', [m('Μελέτη Οργάνου'), m('Μελέτη Οργάνου'), m('Μελέτη Οργάνου'), m('Μελέτη Οργάνου'), m('Μελέτη Οργάνου')]],
+    ['8η','13:50–14:20', [g('Ενισχυτική Διδασκαλία'), m('Σύνολο Δωματίου'), g('Ενισχυτική Διδασκαλία'), m('Σύνολο Δωματίου'), g('Μελέτη & Βιβλιοθήκη')]],
+    ['9η','14:30–15:00', [m('Γενική Πρόβα','Ορχήστρα / Χορωδία'), e, e, m('Γενική Πρόβα','Ορχήστρα / Χορωδία'), e]],
+  ];
+  Object.keys(SCHEDULES).forEach(k => { SCHEDULES[k] = SCHEDULES[k].concat(AFTERNOON); });
+
+  const GRADE_LABELS = {A:'Α&rsquo; Γυμνασίου', B:'Β&rsquo; Γυμνασίου', G:'Γ&rsquo; Γυμνασίου', AL:'Α&rsquo; Λυκείου', BL:'Β&rsquo; Λυκείου', GL:'Γ&rsquo; Λυκείου'};
+
+  function renderSchedule(rows){
+    const tbody = document.querySelector('.schedule-table tbody');
+    tbody.innerHTML = rows.map(r => {
+      const cells = r[2].map(c => {
+        if(!c) return '<td><div class="lesson empty">&mdash;</div></td>';
+        const sub = c.s ? `<span class="l-sub">${c.s}</span>` : '';
+        return `<td><div class="lesson ${c.t === 'm' ? 'music' : 'general'}">${c.n}${sub}</div></td>`;
+      }).join('');
+      return `<tr><td class="period-cell"><span class="p-num">${r[0]}</span>${r[1]}</td>${cells}</tr>`;
+    }).join('');
+  }
+
+  const scheduleTitle = document.getElementById('scheduleTitle');
+  const scheduleReset = document.getElementById('scheduleReset');
+  const scheduleAnchor = document.getElementById('scheduleAnchor');
+  const schedulePlaceholder = document.getElementById('schedulePlaceholder');
+
+  function selectClass(pill){
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    const grade = pill.getAttribute('data-grade');
+    renderSchedule(SCHEDULES[grade]);
+    scheduleTitle.innerHTML = 'Πρόγραμμα Τμήματος ' + pill.textContent + ' &mdash; ' + GRADE_LABELS[grade];
+    schedulePlaceholder.classList.add('hidden');
+    scheduleAnchor.classList.add('visible');
+    scheduleReset.classList.add('visible');
+    scheduleAnchor.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  document.querySelectorAll('.pill[data-grade]').forEach(pill => {
+    pill.addEventListener('click', () => selectClass(pill));
+  });
+
+  scheduleReset.addEventListener('click', () => {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    scheduleTitle.textContent = 'Επιλέξτε τμήμα παραπάνω για να δείτε το πρόγραμμά του';
+    schedulePlaceholder.classList.remove('hidden');
+    scheduleAnchor.classList.remove('visible');
+    scheduleReset.classList.remove('visible');
+  });
+</script>
+</body>
+</html>
